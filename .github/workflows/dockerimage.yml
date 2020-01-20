@@ -1,0 +1,26 @@
+name: Docker Image CI
+
+on:
+  schedule:
+    - cron: "0 0 * * */7"
+  push:
+    branches: 
+      - master
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag bradynpoulsen/archive-utils:latest
+    - name: Publish the Docker image
+      uses: manusa/actions-publish-docker@v1.0.1
+      with:
+        name: bradynpoulsen/archive-utils
+        tag: latest
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
